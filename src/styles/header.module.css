@@ -1,3 +1,5 @@
+
+
 .header {
   box-sizing: border-box;
   padding: 2rem 6.3rem 1.9rem 6.6rem;
@@ -20,7 +22,7 @@
   line-height: 1.5125;
   text-transform: uppercase;
   color: #ffffff;
-  font-family: Prompt, 'Source Sans Pro', sans-serif;
+  font-family: Prompt, 'Source Sans Pro';
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -50,7 +52,23 @@
   border:none;
   background-color:transparent;
   outline:none;
-  font-family: Prompt, 'Source Sans Pro', sans-serif;
+  font-family: Prompt, 'Source Sans Pro';
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.header .header_box .nav_box .nav .nav_item:hover {
+  animation: bubble 0.4s ease-out;
+  cursor: pointer;
+  animation-fill-mode: forwards;
+}
+
+
+@keyframes bubble {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
