@@ -45,29 +45,6 @@ const CategoryList: FC<{}> = () => {
                 </div>
             </div>
         ))}
-        {/* <div className={styles.hotels_div}>
-            <div className={styles.hotel}>
-                <div className={styles.hotel_png_div}>
-                    <div className={styles.category_png}>
-                        <Image src={hotel} alt="hotel" width={60} height={60}></Image>
-                    </div>
-                </div>
-                <p className={styles.category_title}>Hotels</p>
-            </div>
-        </div>
-        <div className={styles.rests_div}>
-            <div className={styles.rest}>
-                <div className={styles.rest_png_div}>
-                    <div className={styles.category_png}>
-                        <Image src={restaurant} alt="restaurant" width={60} height={60}></Image>
-                    </div>
-                </div>
-                <p className={styles.category_title}>Restaurants</p>
-            </div>
-        </div>
-        <div>
-
-        </div> */}
     </div>
     )
 }
