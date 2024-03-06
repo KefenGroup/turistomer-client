@@ -1,0 +1,10 @@
+.a {
+  list-style-type: none;
+}
+.b {
+  float: left;
+  padding: 0 1em;
+}
+.b:nth-child(3n + 1) {
+  clear: both;
+}
