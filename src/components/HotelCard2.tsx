@@ -1,17 +1,8 @@
 import React, { FC, useState } from "react";
 import {
   Grid,
-  Rating,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  AccordionActions,
   Button,
-  Link,
-  List,
-  ListItemText,
-  ListItem,
   Divider,
   CardContent,
   CardMedia,
@@ -24,6 +15,7 @@ import {
   StarOutline,
   ForkRightRounded,
 } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 
 type Amenity = {
   id: number;
@@ -40,7 +32,16 @@ type Hotel = {
   link: string;
 };
 
-const HotelCard: FC<Hotel> = ({ id, name, city, rating, amenities, link }) => {
+const HotelCard: FC<Hotel> = ({
+  id,
+  name,
+  city,
+  rating,
+  amenities,
+  longitude,
+  latitude,
+  link,
+}) => {
   const [page, setPage] = useState(1);
 
   const amenitiyGroups = [
@@ -209,7 +210,8 @@ const HotelCard: FC<Hotel> = ({ id, name, city, rating, amenities, link }) => {
     })
     .filter(({ groupName, amenities }) => amenities.length !== 0);
 
-  console.log(filteredAmenities);
+  const router = useRouter();
+  console.log(name, longitude, latitude);
   return (
     <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
       <Grid
@@ -283,7 +285,14 @@ const HotelCard: FC<Hotel> = ({ id, name, city, rating, amenities, link }) => {
                 >
                   Checkout the Price
                 </Button>
-                <Button startIcon={<ForkRightRounded />}>Get Directions</Button>
+                <Button
+                  onClick={() =>
+                    router.push(`/map?lng=${longitude}&lat=${latitude}`)
+                  }
+                  startIcon={<ForkRightRounded />}
+                >
+                  Get Directions
+                </Button>
               </CardActions>
             </Grid>
           </CardContent>
