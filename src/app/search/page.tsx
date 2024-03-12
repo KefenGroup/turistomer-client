@@ -18,7 +18,7 @@ import {
   IconButton,
 } from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard";
-import HotelCard from "@/components/HotelCard";
+import HotelCard from "@/components/HotelCard2";
 import Head from "next/head";
 
 export default function HomePage() {

@@ -72,7 +72,7 @@ const HotelCard: FC<Hotel> = ({ id, name, city, rating, amenities, link }) => {
               {"Checkout the current price!"}
             </Link>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <Typography>Group1</Typography>
             <Grid container spacing={1}>
               {amenities.slice(0, 10).map(({ id, name }) => (
@@ -82,7 +82,7 @@ const HotelCard: FC<Hotel> = ({ id, name, city, rating, amenities, link }) => {
               ))}
             </Grid>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={6}>
             <Typography>Group2</Typography>
             <Grid container spacing={1}>
               {amenities.slice(10, 15).map(({ id, name }) => (
