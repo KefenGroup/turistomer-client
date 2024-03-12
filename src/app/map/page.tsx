@@ -1,42 +1,90 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Map } from "react-map-gl";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
+import { useSearchParams } from "next/navigation";
 
 export default function DirectionsMap() {
-  interface IViewState {
-    longitude: number;
-    latitude: number;
-    zoom: number;
-  }
-  const [viewState, setViewState] = useState<IViewState>({
-    longitude: -122.4,
-    latitude: 37.8,
-    zoom: 14,
+  // interface IViewState {
+  //   longitude: number;
+  //   latitude: number;
+  //   zoom: number;
+  // }
+
+  // const [viewState, setViewState] = useState<IViewState>({
+  //   longitude: 35.243322,
+  //   latitude: 38.963745,
+  //   zoom: 5,
+  // });
+  const DEFAULT_LNG = 35.243322;
+  const DEFAULT_LAT = 38.963745;
+  const searchParams = useSearchParams();
+
+  const [mapState, setMapState] = useState<Map | null>(null);
+  const [userLocation, setUserLocation] = useState({
+    lng: DEFAULT_LNG,
+    lat: DEFAULT_LAT,
   });
-  const [mapRef, setMapRef] = useState<Map | null>(null);
+
+  const mapControlRef = useRef(
+    new MapboxDirections({
+      accessToken: process.env.NEXT_PUBLIC_MAP_BOX_API_TOKEN,
+      unit: "metric",
+      profile: "mapbox/driving",
+    })
+  );
 
   useEffect(() => {
-    if (mapRef) {
-      const directions = new MapboxDirections({
-        accessToken: process.env.NEXT_PUBLIC_MAP_BOX_API_TOKEN,
-        unit: "metric",
-        profile: "mapbox/driving",
-      });
-      mapRef.addControl(directions, "top-left");
+    navigator.geolocation.watchPosition(
+      (position) => {
+        console.log(position.coords);
+        mapControlRef.current.setOrigin([
+          position.coords.longitude,
+          position.coords.latitude,
+        ]);
+      },
+      (err) => console.log(err),
+      { maximumAge: 0, timeout: 15000, enableHighAccuracy: true }
+    );
+  }, []);
+
+  useEffect(() => {
+    if (mapState) {
+      if (!mapState.hasControl(mapControlRef.current)) {
+        mapState.addControl(mapControlRef.current, "top-left");
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log(position.coords);
+          mapControlRef.current.setOrigin([
+            position.coords.longitude,
+            position.coords.latitude,
+          ]);
+          mapControlRef.current.setDestination([
+            searchParams.get("lat"),
+            searchParams.get("lng"),
+          ]);
+        },
+        (err) => console.log(err),
+        { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true }
+      );
     }
-  }, [mapRef]);
+  }, [mapState, userLocation, searchParams]);
 
   return (
     <Map
-      {...viewState}
-      onMove={(state) => setViewState(state.viewState)}
+      // {...viewState}
+      // onMove={(state) => setViewState(state.viewState)}
+      initialViewState={{ longitude: 35.243322, latitude: 38.963745, zoom: 5 }}
       mapboxAccessToken={process.env.NEXT_PUBLIC_MAP_BOX_API_TOKEN}
-      style={{ width: 600, height: 400 }}
+      style={{ width: "100%", height: "100%" }}
       mapStyle="mapbox://styles/mapbox/streets-v9"
-      ref={(nextRef) => setMapRef(nextRef)}
+      ref={(nextRef) => {
+        setMapState(nextRef);
+      }}
     />
   );
 }
