@@ -3,7 +3,12 @@
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { Search } from "@mui/icons-material";
-import { TextField, InputAdornment, IconButton } from "@mui/material";
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  Pagination,
+} from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
 import FilterCard from "@/components/FilterCard";
@@ -14,18 +19,21 @@ export default function HomePage() {
   const [dataType, setDataType] = useState<ApiDataType>("restaurants");
   const [apiData, setApiData] = useState<any>([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
     const fetchData = async () => {
       let base = process.env.BASE_URL;
-      const req = await fetch(`http://localhost:8080/api/${dataType}/0/30`);
+      const req = await fetch(
+        `http://localhost:8080/api/${dataType}/${pageNumber - 1}/30`
+      );
       const data = await req.json();
       console.log(data);
       setApiData(data);
       setIsFetched(true);
     };
     fetchData();
-  }, [dataType]);
+  }, [dataType, pageNumber]);
 
   return (
     <>
@@ -69,7 +77,15 @@ export default function HomePage() {
           }}
         />
 
-        <div style={{ marginBottom: 50 }}>
+        <Pagination
+          page={pageNumber}
+          onChange={(e, val) => setPageNumber(val)}
+          sx={{ marginBottom: 2 }}
+          count={10}
+          color="primary"
+        />
+
+        <div>
           {isFetched &&
             apiData.map((data: any) =>
               dataType === "restaurants" ? (
@@ -79,6 +95,14 @@ export default function HomePage() {
               )
             )}
         </div>
+
+        <Pagination
+          sx={{ marginBottom: 10 }}
+          page={pageNumber}
+          onChange={(e, val) => setPageNumber(val)}
+          count={10}
+          color="primary"
+        />
       </div>
     </>
   );
