@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import { useEffect, useState } from "react";
 import { Search } from "@mui/icons-material";
 import { TextField, InputAdornment, IconButton } from "@mui/material";
-import RestaurantCard from "@/components/RestaurantCard";
+import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
 import FilterCard from "@/components/FilterCard";
 

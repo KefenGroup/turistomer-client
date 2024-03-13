@@ -1,59 +1,55 @@
-import React, { FC, useState } from "react";
+import React, { FC } from "react";
 import {
   Grid,
+  Rating,
   Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  AccordionActions,
   Button,
-  Divider,
-  CardContent,
-  CardMedia,
   Card,
+  CardMedia,
+  CardContent,
+  Divider,
   CardActions,
-  Pagination,
 } from "@mui/material";
 import {
+  ArrowDownward,
+  AssistantDirection,
   CurrencyLira,
-  StarOutline,
   ForkRightRounded,
+  StarOutline,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
-import { HOTEL_AMENITY_GROUPS } from "@/constants";
 
-type Amenity = {
+type Cuisine = {
   id: number;
   name: string;
 };
-type Hotel = {
+type Restaurant = {
   id: number;
   city: string;
   rating: number;
   longitude: number;
   latitude: number;
-  amenities: Amenity[];
+  priceHigher: number;
+  priceLower: number;
+  cuisines: Cuisine[];
   name: string;
-  link: string;
 };
 
-const HotelCard: FC<Hotel> = ({
+const RestaurantCard: FC<Restaurant> = ({
   id,
   name,
   city,
   rating,
-  amenities,
+  cuisines,
+  priceLower,
+  priceHigher,
   longitude,
   latitude,
-  link,
 }) => {
-  const [page, setPage] = useState(1);
-
-  const filteredAmenities = HOTEL_AMENITY_GROUPS.map((item) => {
-    return {
-      groupName: item.groupName,
-      amenities: item.amenities.filter((val) =>
-        amenities.map(({ id, name }) => name).includes(val)
-      ),
-    };
-  }).filter(({ groupName, amenities }) => amenities.length !== 0);
-
   const router = useRouter();
   return (
     <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
@@ -71,37 +67,63 @@ const HotelCard: FC<Hotel> = ({
             image="/hotelcard.jpg"
           />
         </Grid>
+
         <Grid item xs={7}>
           <CardContent>
             <Typography color="gray" variant="subtitle1">
-              Entire Hotel in {city}
+              Entire Restaurant in {city}
             </Typography>
             <Typography variant="h4">{name}</Typography>
+
             <Divider sx={{ marginY: 2 }} />
+
+            <Grid item xs={12}>
+              <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                Meals
+              </Typography>
+              <Grid container spacing={2}>
+                {["Breakfast", "Brunch", "Lunch", "Dinner"].map(
+                  (name, index) => (
+                    <Grid item xs={4} key={index}>
+                      <Typography variant="h6">{name}</Typography>
+                    </Grid>
+                  )
+                )}
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ width: 50, marginY: 1 }} />
+
+            <Grid item xs={12}>
+              <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                Good For
+              </Typography>
+              <Grid container spacing={2}>
+                {cuisines.map(({ name, id }) => (
+                  <Grid item xs={4} key={id}>
+                    <Typography variant="h6">{name}</Typography>
+                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ width: 50, marginY: 1 }} />
+
             <Grid container spacing={2}>
-              {filteredAmenities.length !== 0 && (
-                <Grid sx={{}} item xs={12}>
+              {cuisines.length !== 0 && (
+                <Grid item xs={12}>
                   <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                    {filteredAmenities[page - 1].groupName}
+                    Cuisines
                   </Typography>
-                  <Grid container spacing={0.5}>
-                    {filteredAmenities[page - 1].amenities.map(
-                      (name, index) => (
-                        <Grid item xs={4} key={index}>
-                          <Typography variant="h6">{name}</Typography>
-                        </Grid>
-                      )
-                    )}
+                  <Grid container spacing={2}>
+                    {cuisines.map(({ name, id }) => (
+                      <Grid item xs={4} key={id}>
+                        <Typography variant="h6">{name}</Typography>
+                      </Grid>
+                    ))}
                   </Grid>
                 </Grid>
               )}
-
-              <Pagination
-                page={page}
-                onChange={(event, val) => setPage(val)}
-                sx={{ paddingTop: 1 }}
-                count={filteredAmenities.length}
-              />
             </Grid>
             <Divider sx={{ marginY: 2 }} />
             <Grid
@@ -116,17 +138,15 @@ const HotelCard: FC<Hotel> = ({
                   style={{ color: "orange" }}
                   sx={{ marginLeft: 1 }}
                 ></StarOutline>
+                {/* {`(${(Math.random() * 1000).toFixed(0)} reviews)`} */}
+              </Typography>
+
+              <Typography variant="h6" display="flex" alignItems="center">
+                <CurrencyLira /> {priceLower + "  -  "}
+                {priceHigher}
               </Typography>
 
               <CardActions>
-                <Button
-                  onClick={() => {
-                    window.open(`https://www.tripadvisor.com.tr/${link}`);
-                  }}
-                  startIcon={<CurrencyLira />}
-                >
-                  Checkout the Price
-                </Button>
                 <Button
                   onClick={() =>
                     router.push(`/map?lng=${longitude}&lat=${latitude}`)
@@ -144,4 +164,4 @@ const HotelCard: FC<Hotel> = ({
   );
 };
 
-export default HotelCard;
+export default RestaurantCard;
