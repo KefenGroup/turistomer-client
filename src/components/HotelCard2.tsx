@@ -16,6 +16,7 @@ import {
   ForkRightRounded,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
+import { HOTEL_AMENITY_GROUPS } from "@/constants";
 
 type Amenity = {
   id: number;
@@ -44,174 +45,16 @@ const HotelCard: FC<Hotel> = ({
 }) => {
   const [page, setPage] = useState(1);
 
-  const amenitiyGroups = [
-    {
-      groupName: "Dinlence ve Aktiviteler",
-      amenities: [
-        "Yoga dersleri",
-        "Masaj (el masajı, tam vücut masajı, ayak masajı, baş masajı, boyun masajı)",
-        "Tenis kortu",
-        "Squash",
-        "Golf sahası",
-        "Bilardo",
-        "Dart",
-        "Masa tenisi",
-        "Bowling",
-        "Badminton",
-        "Rüzgar sörfü",
-        "Kano",
-        "Şnorkelli dalış",
-        "Dalış",
-        "Ata binme",
-        "Balık tutma",
-        "Kayak",
-        "Okçuluk",
-        "Bisiklet turları",
-        "Bisiklet mevcut",
-        "Yürüyüş turları",
-        "Doğa yürüyüşü",
-        "Kayak kiralama",
-        "Su sporları ekipmanı kiralama",
-        "Video oyun konsolu",
-        "Oyun salonu",
-        "Çocuklar için oyun alanı",
-        "Çocuk kulübü",
-        "Animasyon ekibi",
-        "Gece eğlencesi",
-        "Karaoke",
-        "Gece kulübü/DJ",
-        "Casino ve talih oyunları",
-      ],
-    },
-    {
-      groupName: "Konfor ve Oda Özellikleri",
-      amenities: [
-        "Ücretsiz internet",
-        "Ayrı oturma odası",
-        "Ayrı yemek salonu",
-        "Birbirine açılan odalar mevcut",
-        "Kablolu/uydu bağlantılı TV",
-        "Balayı süiti",
-        "Süitler",
-        "Aile odaları",
-        "Sigara içilebilen odalar mevcut",
-        "Ses geçirmez odalar",
-        "Oturma alanı",
-        "Düz ekran televizyon",
-        "Klima",
-        "Küçük mutfak",
-        "Buzdolabı",
-        "Mikrodalga fırın",
-        "Bulaşık makinesi",
-        "Mutfak eşyaları",
-        "Elektrikli su ısıtıcısı",
-        "Kahve/çay makinesi",
-        "Minibar",
-        "Ücretsiz banyo ve kişisel bakım malzemeleri",
-        "Bornoz",
-        "Saç kurutma makinesi",
-        "Ortak mutfak",
-      ],
-    },
-    {
-      groupName: "Yiyecek ve İçecek",
-      amenities: [
-        "Barbekü alanları",
-        "Çocuklara uygun büfe",
-        "Restoran",
-        "Bar/oturma salonu",
-        "Çatı barı",
-        "Odaya kahvaltı",
-        "Ücretsiz kahvaltı",
-        "Açık büfe kahvaltı",
-        "Çocuk yemekleri",
-        "Özel diyet menüleri",
-        "Şarap/şampanya",
-        "İndirimli içki saati",
-        "Kahve dükkanı",
-        "Atıştırmalık büfesi",
-        "Açık hava yemek salonu",
-      ],
-    },
-    {
-      groupName: "Sağlık ve Spor",
-      amenities: [
-        "Spor salonlu/spor odalı fitness merkezi",
-        "Havuz (açık havuz, kapalı havuz, ısıtmalı havuz, çocuk havuzu, manzaralı havuz, sığ kısmı bulunan havuz, tuzlu su havuzu, kaplıca havuzu, özel havuz, çatı havuzu)",
-        "Sauna",
-        "Buhar odası",
-        "Spa",
-        "Güneşlenme alanı",
-        "Güneşlenme terası",
-        "Solaryum",
-        "Yoga odası",
-        "Aerobik",
-        "Fitness kursları",
-      ],
-    },
-    {
-      groupName: "Ulaşım ve Park Hizmetleri",
-      amenities: [
-        "Servis otobüsü hizmeti",
-        "Yakınlarda halka açık ücretsiz otopark",
-        "Cadde üzerinde park",
-        "Tesis içi halka açık ücretli otopark",
-        "Güvenli otopark",
-        "Vale park hizmeti",
-        "Tesis içinde ücretli özel otopark",
-        "Yakınlarda ücretsiz özel otopark",
-        "Yakınlarda ücretli halka açık otopark",
-        "Yakınlarda ücretli özel otopark",
-        "Araba kiralama",
-        "Elektrikli araç şarj istasyonu",
-        "Ücretsiz servis veya taksi hizmetleri",
-        "Havaalanı ulaşım hizmeti",
-        "Ücretsiz havaalanı ulaşım hizmeti",
-        "Bisiklet kiralama",
-      ],
-    },
-    {
-      groupName: "Aile ve Çocuklar için Olanaklar",
-      amenities: [
-        "Çocuklar için kitaplar",
-        "Çocuklar için kapalı oyun alanı",
-        "Çocuk Aktiviteleri (Çocuğa/Aileye Uygun)",
-        "Bebek sandalyesi mevcut",
-        "Puset",
-        "Çocuk havuzu",
-        "Çocuklara uygun televizyon kanalları",
-        "Bebek bakımı",
-        "Çocuklara ücretsiz konaklama",
-        "Çocuklar için açık hava oyun ekipmanı",
-      ],
-    },
-    {
-      groupName: "İş ve Toplantı Olanakları",
-      amenities: [
-        "Fotokopi/faks",
-        "İş merkezinde ücretsiz kablosuz ağ",
-        "İş merkezinde ücretsiz kablolu internet",
-        "Toplantı odaları",
-        "Konferans salonu",
-        "İnternet bağlantılı iş amaçlı bölüm",
-        "Dizüstü bilgisayar kasası",
-      ],
-    },
-  ];
-
-  const filteredAmenities = amenitiyGroups
-    .map((item) => {
-      return {
-        groupName: item.groupName,
-        amenities: item.amenities.filter((val) =>
-          amenities.map(({ id, name }) => name).includes(val)
-        ),
-      };
-    })
-    .filter(({ groupName, amenities }) => amenities.length !== 0);
+  const filteredAmenities = HOTEL_AMENITY_GROUPS.map((item) => {
+    return {
+      groupName: item.groupName,
+      amenities: item.amenities.filter((val) =>
+        amenities.map(({ id, name }) => name).includes(val)
+      ),
+    };
+  }).filter(({ groupName, amenities }) => amenities.length !== 0);
 
   const router = useRouter();
-  console.log(name, longitude, latitude);
   return (
     <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
       <Grid
@@ -237,7 +80,7 @@ const HotelCard: FC<Hotel> = ({
             <Divider sx={{ marginY: 2 }} />
             <Grid container spacing={2}>
               {filteredAmenities.length !== 0 && (
-                <Grid sx={{ height: 150 }} item xs={12}>
+                <Grid sx={{}} item xs={12}>
                   <Typography sx={{ paddingBottom: 1 }} variant="h5">
                     {filteredAmenities[page - 1].groupName}
                   </Typography>
