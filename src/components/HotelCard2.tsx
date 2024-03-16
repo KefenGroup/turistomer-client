@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, memo, useState } from "react";
 import {
   Grid,
   Typography,
@@ -33,7 +33,7 @@ type Hotel = {
   link: string;
 };
 
-const HotelCard: FC<Hotel> = ({
+const HotelCard: FC<Hotel> = memo(function HotelCard({
   id,
   name,
   city,
@@ -42,7 +42,7 @@ const HotelCard: FC<Hotel> = ({
   longitude,
   latitude,
   link,
-}) => {
+}) {
   const [page, setPage] = useState(1);
 
   const filteredAmenities = HOTEL_AMENITY_GROUPS.map((item) => {
@@ -142,6 +142,6 @@ const HotelCard: FC<Hotel> = ({
       </Grid>
     </Card>
   );
-};
+});
 
 export default HotelCard;

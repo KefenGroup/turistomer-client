@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, memo } from "react";
 import {
   Grid,
   Rating,
@@ -39,7 +39,7 @@ type Restaurant = {
   name: string;
 };
 
-const RestaurantCard: FC<Restaurant> = ({
+const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
   id,
   name,
   city,
@@ -49,7 +49,7 @@ const RestaurantCard: FC<Restaurant> = ({
   priceHigher,
   longitude,
   latitude,
-}) => {
+}) {
   const router = useRouter();
   return (
     <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
@@ -162,6 +162,6 @@ const RestaurantCard: FC<Restaurant> = ({
       </Grid>
     </Card>
   );
-};
+});
 
 export default RestaurantCard;

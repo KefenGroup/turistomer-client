@@ -1,18 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import styles from "./page.module.css";
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Search } from "@mui/icons-material";
 import {
   TextField,
   InputAdornment,
   IconButton,
   Pagination,
-  Box,
-  Typography,
-  Card,
-  CardHeader,
-  Avatar,
 } from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
