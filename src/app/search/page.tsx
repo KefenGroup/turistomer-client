@@ -2,7 +2,7 @@
 "use client";
 import styles from "./page.module.css";
 import { memo, useEffect, useState } from "react";
-import { Search } from "@mui/icons-material";
+import { Search, Send } from "@mui/icons-material";
 import {
   TextField,
   InputAdornment,
@@ -85,11 +85,60 @@ export default function HomePage() {
     <>
       <style>{"body { overflow: auto; background-color: #e2ebf0; }"}</style>
       <div className={styles.content}>
-        <div className={styles.div_categories}>
+        {/* <div className={styles.div_categories}>
           <p className={styles.header}>Our Popular Categories</p>
+        </div> */}
+
+        <div style={{ border: "solid 1px" }} className={styles.content_2}>
+          <ChatBox promptHistory={promptHistory} />
+
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            <TextField
+              value={prompt}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                setPrompt(event.target.value);
+              }}
+              sx={{ width: "80%" }}
+              id="filled-basic"
+              label="Chat with AI!"
+              variant="outlined"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => {
+                        setPromptHistory((prev) => [...prev, prompt]);
+                        postPrompt();
+                      }}
+                      edge="end"
+                    >
+                      <Send />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                style: { fontSize: 15 },
+              }}
+              InputLabelProps={{ style: { fontSize: 12 } }}
+            ></TextField>
+          </div>
+
+          {/* <FilterCard
+            establishmentType={dataType}
+            handleEstablishmentType={(e) => {
+              setIsFetched(false);
+              setDataType(e.target.value as ApiDataType);
+            }}
+          /> */}
         </div>
 
-        <ChatBox promptHistory={promptHistory} />
+        {/* <ChatBox promptHistory={promptHistory} />
 
         <div
           style={{
@@ -134,9 +183,51 @@ export default function HomePage() {
             setIsFetched(false);
             setDataType(e.target.value as ApiDataType);
           }}
-        />
+        /> */}
+        <div
+          style={{
+            height: "100%",
+            width: "60%",
+            marginLeft: 30,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Pagination
+            page={pageNumber}
+            onChange={(e, val) => setPageNumber(val)}
+            sx={{ marginBottom: 2 }}
+            count={10}
+            color="primary"
+          />
+          <FilterCard
+            establishmentType={dataType}
+            handleEstablishmentType={(e) => {
+              setIsFetched(false);
+              setDataType(e.target.value as ApiDataType);
+            }}
+          />
+          <div>
+            {isFetched &&
+              apiData.map((data: any) =>
+                dataType === "restaurants" ? (
+                  <RestaurantCard key={data.id} {...data} />
+                ) : (
+                  <HotelCard key={data.id} {...data} />
+                )
+              )}
+          </div>
+          <Pagination
+            sx={{ marginBottom: 10 }}
+            page={pageNumber}
+            onChange={(e, val) => setPageNumber(val)}
+            count={10}
+            color="primary"
+          />
+        </div>
 
-        <Pagination
+        {/* <Pagination
           page={pageNumber}
           onChange={(e, val) => setPageNumber(val)}
           sx={{ marginBottom: 2 }}
@@ -161,7 +252,7 @@ export default function HomePage() {
           onChange={(e, val) => setPageNumber(val)}
           count={10}
           color="primary"
-        />
+        /> */}
       </div>
     </>
   );

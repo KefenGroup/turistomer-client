@@ -8,17 +8,13 @@ type Props = {
 const ChatBox: FC<Props> = ({ promptHistory }) => {
   return (
     <Box
-      width={"55%"}
-      height={300}
-      my={4}
+      width={"100%"}
+      height={"100%"}
       gap={4}
       p={2}
       sx={{
         overflowY: "scroll",
         boxSizing: "border-box",
-        borderStyle: "solid",
-        borderColor: "#b4cbd8",
-        borderRadius: 2,
         display: "flex",
         // justifyContent: "flex-end",
         flexDirection: "column",
@@ -37,6 +33,7 @@ const ChatBox: FC<Props> = ({ promptHistory }) => {
             sx={{
               height: "fit-content",
               padding: 1,
+              paddingRight: 2,
               float: index % 2 == 0 ? "right" : "left",
               maxWidth: "65%",
               display: "flex",

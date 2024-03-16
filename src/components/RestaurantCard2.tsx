@@ -13,6 +13,7 @@ import {
   CardContent,
   Divider,
   CardActions,
+  Box,
 } from "@mui/material";
 import {
   ArrowDownward,
@@ -52,115 +53,118 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
 }) {
   const router = useRouter();
   return (
-    <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
-      <Grid
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        container
-        spacing={2}
-      >
-        <Grid item xs={5}>
-          <CardMedia
-            component="img"
-            sx={{ height: 140, borderRadius: "5%" }}
-            image="/hotelcard.jpg"
-          />
-        </Grid>
+    <>
+      <Box sx={{ marginBottom: 2, px: 2, maxWidth: 700 }}>
+        <Grid
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          container
+          spacing={2}
+        >
+          <Grid item xs={5}>
+            <CardMedia
+              component="img"
+              sx={{ height: 140, borderRadius: "5%" }}
+              image="/hotelcard.jpg"
+            />
+          </Grid>
 
-        <Grid item xs={7}>
-          <CardContent>
-            <Typography color="gray" variant="subtitle1">
-              Entire Restaurant in {city}
-            </Typography>
-            <Typography variant="h4">{name}</Typography>
-
-            <Divider sx={{ marginY: 2 }} />
-
-            <Grid item xs={12}>
-              <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                Meals
+          <Grid item xs={7}>
+            <CardContent>
+              <Typography color="gray" variant="subtitle1">
+                Entire Restaurant in {city}
               </Typography>
-              <Grid container spacing={2}>
-                {["Breakfast", "Brunch", "Lunch", "Dinner"].map(
-                  (name, index) => (
-                    <Grid item xs={4} key={index}>
-                      <Typography variant="h6">{name}</Typography>
-                    </Grid>
-                  )
-                )}
-              </Grid>
-            </Grid>
+              <Typography variant="h4">{name}</Typography>
 
-            <Divider sx={{ width: 50, marginY: 1 }} />
+              <Divider sx={{ marginY: 2 }} />
 
-            <Grid item xs={12}>
-              <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                Good For
-              </Typography>
-              <Grid container spacing={2}>
-                {cuisines.map(({ name, id }) => (
-                  <Grid item xs={4} key={id}>
-                    <Typography variant="h6">{name}</Typography>
-                  </Grid>
-                ))}
-              </Grid>
-            </Grid>
-
-            <Divider sx={{ width: 50, marginY: 1 }} />
-
-            <Grid container spacing={2}>
-              {cuisines.length !== 0 && (
-                <Grid item xs={12}>
-                  <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                    Cuisines
-                  </Typography>
-                  <Grid container spacing={2}>
-                    {cuisines.map(({ name, id }) => (
-                      <Grid item xs={4} key={id}>
+              <Grid item xs={12}>
+                <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                  Meals
+                </Typography>
+                <Grid container spacing={2}>
+                  {["Breakfast", "Brunch", "Lunch", "Dinner"].map(
+                    (name, index) => (
+                      <Grid item xs={4} key={index}>
                         <Typography variant="h6">{name}</Typography>
                       </Grid>
-                    ))}
-                  </Grid>
+                    )
+                  )}
                 </Grid>
-              )}
-            </Grid>
-            <Divider sx={{ marginY: 2 }} />
-            <Grid
-              display="flex"
-              alignItems="center"
-              justifyContent="space-between"
-            >
-              <Typography variant="h6" display="flex" alignItems="center">
-                {rating === -1 ? "?" : rating.toFixed(1)}
-                <StarOutline
-                  fontSize="large"
-                  style={{ color: "orange" }}
-                  sx={{ marginLeft: 1 }}
-                ></StarOutline>
-                {/* {`(${(Math.random() * 1000).toFixed(0)} reviews)`} */}
-              </Typography>
+              </Grid>
 
-              <Typography variant="h6" display="flex" alignItems="center">
-                <CurrencyLira /> {priceLower + "  -  "}
-                {priceHigher}
-              </Typography>
+              <Divider sx={{ width: 50, marginY: 1 }} />
 
-              <CardActions>
-                <Button
-                  onClick={() =>
-                    router.push(`/map?lng=${longitude}&lat=${latitude}`)
-                  }
-                  startIcon={<ForkRightRounded />}
-                >
-                  Get Directions
-                </Button>
-              </CardActions>
-            </Grid>
-          </CardContent>
+              <Grid item xs={12}>
+                <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                  Good For
+                </Typography>
+                <Grid container spacing={2}>
+                  {cuisines.map(({ name, id }) => (
+                    <Grid item xs={4} key={id}>
+                      <Typography variant="h6">{name}</Typography>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Grid>
+
+              <Divider sx={{ width: 50, marginY: 1 }} />
+
+              <Grid container spacing={2}>
+                {cuisines.length !== 0 && (
+                  <Grid item xs={12}>
+                    <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                      Cuisines
+                    </Typography>
+                    <Grid container spacing={2}>
+                      {cuisines.map(({ name, id }) => (
+                        <Grid item xs={4} key={id}>
+                          <Typography variant="h6">{name}</Typography>
+                        </Grid>
+                      ))}
+                    </Grid>
+                  </Grid>
+                )}
+              </Grid>
+              <Divider sx={{ marginY: 2 }} />
+              <Grid
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Typography variant="h6" display="flex" alignItems="center">
+                  {rating === -1 ? "?" : rating.toFixed(1)}
+                  <StarOutline
+                    fontSize="large"
+                    style={{ color: "orange" }}
+                    sx={{ marginLeft: 1 }}
+                  ></StarOutline>
+                  {/* {`(${(Math.random() * 1000).toFixed(0)} reviews)`} */}
+                </Typography>
+
+                <Typography variant="h6" display="flex" alignItems="center">
+                  <CurrencyLira /> {priceLower + "  -  "}
+                  {priceHigher}
+                </Typography>
+
+                <CardActions>
+                  <Button
+                    onClick={() =>
+                      router.push(`/map?lng=${longitude}&lat=${latitude}`)
+                    }
+                    startIcon={<ForkRightRounded />}
+                  >
+                    Get Directions
+                  </Button>
+                </CardActions>
+              </Grid>
+            </CardContent>
+          </Grid>
         </Grid>
-      </Grid>
-    </Card>
+        <Divider sx={{ backgroundColor: "#BABABA" }} />
+      </Box>
+    </>
   );
 });
 

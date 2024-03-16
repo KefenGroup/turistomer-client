@@ -1,10 +1,20 @@
 .content {
   box-sizing: border-box;
   width: 100%;
+  justify-content: space-between;
+  display: flex;
+  padding: 2rem;
+}
+.content_2 {
+  box-sizing: border-box;
+  width: 40%;
+  max-height: 100vh;
   align-items: center;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
 }
 .content .div_categories {
   width: calc(100% - 23.1rem);
