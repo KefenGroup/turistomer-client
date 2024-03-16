@@ -34,7 +34,6 @@ const FilterCard: FC<Props> = ({
   const [minItemToDisplay, setMinItemToDisplay] = useState<number>(12);
   const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
 
-  console.log(minItemToDisplay);
   function RestaurantFilterCard() {
     return (
       <>

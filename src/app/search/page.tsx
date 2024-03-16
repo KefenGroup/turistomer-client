@@ -1,17 +1,23 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import styles from "./page.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Search } from "@mui/icons-material";
 import {
   TextField,
   InputAdornment,
   IconButton,
   Pagination,
+  Box,
+  Typography,
+  Card,
+  CardHeader,
+  Avatar,
 } from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
 import FilterCard from "@/components/FilterCard";
+import ChatBox from "@/components/ChatBox";
 
 export default function HomePage() {
   type ApiDataType = "restaurants" | "hotels";
@@ -20,6 +26,8 @@ export default function HomePage() {
   const [apiData, setApiData] = useState<any>([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
+  const [prompt, setPrompt] = useState<string>("");
+  const [promptHistory, setPromptHistory] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,12 +36,55 @@ export default function HomePage() {
         `http://localhost:8080/api/${dataType}/${pageNumber - 1}/30`
       );
       const data = await req.json();
-      console.log(data);
+      console.log("Hey", data);
       setApiData(data);
       setIsFetched(true);
     };
     fetchData();
   }, [dataType, pageNumber]);
+
+  useEffect(() => {
+    const messageBody = document.getElementById(
+      `prompt_${promptHistory.length - 1}`
+    );
+    console.log("msg", messageBody);
+    messageBody?.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }, [promptHistory]);
+
+  const postPrompt = async () => {
+    let userLoc = { longitude: 0, latitude: 0 };
+    navigator.geolocation.getCurrentPosition((position) => {
+      userLoc.longitude = position.coords.longitude;
+      userLoc.latitude = position.coords.latitude;
+    });
+    const promptData = {
+      type: "restaurant",
+      prompt: prompt,
+      latitude: userLoc.latitude,
+      longitude: userLoc.longitude,
+    };
+    let basicAIPrompt = "";
+    try {
+      const req = await fetch(`http://localhost:8080/model`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(promptData),
+      });
+      const data = await req.json();
+
+      basicAIPrompt = "DONE";
+    } catch (e) {
+      basicAIPrompt = "ERROR";
+    }
+
+    // setApiData(data);
+    setPromptHistory((prev) => [...prev, basicAIPrompt]);
+  };
 
   return (
     <>
@@ -42,6 +93,9 @@ export default function HomePage() {
         <div className={styles.div_categories}>
           <p className={styles.header}>Our Popular Categories</p>
         </div>
+
+        <ChatBox promptHistory={promptHistory} />
+
         <div
           style={{
             display: "flex",
@@ -51,19 +105,29 @@ export default function HomePage() {
           }}
         >
           <TextField
-            sx={{ t: 5, width: "50%", input: { background: "#b4cbd8" } }}
+            value={prompt}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              setPrompt(event.target.value);
+            }}
+            sx={{ t: 5, width: "50%" }}
             id="outlined-basic"
-            label="Search"
+            label="Chat with AI!"
             variant="filled"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton edge="end">
+                  <IconButton
+                    onClick={() => {
+                      setPromptHistory((prev) => [...prev, prompt]);
+                      postPrompt();
+                    }}
+                    edge="end"
+                  >
                     <Search />
                   </IconButton>
                 </InputAdornment>
               ),
-              style: { fontSize: 15 },
+              style: { background: "#b4cbd8", fontSize: 15 },
             }}
             InputLabelProps={{ style: { fontSize: 12 } }}
           ></TextField>
