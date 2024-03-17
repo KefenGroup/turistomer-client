@@ -9,6 +9,7 @@ import {
   Card,
   CardActions,
   Pagination,
+  Box,
 } from "@mui/material";
 import {
   CurrencyLira,
@@ -56,7 +57,7 @@ const HotelCard: FC<Hotel> = memo(function HotelCard({
 
   const router = useRouter();
   return (
-    <Card sx={{ marginBottom: 2, p: 2, maxWidth: 700 }}>
+    <Box sx={{ marginBottom: 2, px: 2, maxWidth: 700 }}>
       <Grid
         display="flex"
         justifyContent="center"
@@ -140,7 +141,8 @@ const HotelCard: FC<Hotel> = memo(function HotelCard({
           </CardContent>
         </Grid>
       </Grid>
-    </Card>
+      <Divider sx={{ backgroundColor: "#BABABA" }} />
+    </Box>
   );
 });
 

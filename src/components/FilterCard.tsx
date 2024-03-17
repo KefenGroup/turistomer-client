@@ -297,10 +297,10 @@ const FilterCard: FC<Props> = ({
   }
 
   return (
-    <div style={{ width: "50%", height: "100%", marginBottom: 20 }}>
+    <div style={{ width: "100%", height: "100%", marginBottom: 20 }}>
       <Button
         onClick={() => setIsFilterVisible(!isFilterVisible)}
-        variant="text"
+        variant="contained"
         endIcon={isFilterVisible ? <ArrowDownward /> : <ArrowUpward />}
       >
         <Typography variant="h6">Filter</Typography>
@@ -311,7 +311,6 @@ const FilterCard: FC<Props> = ({
             backgroundColor: "transparent",
             marginBottom: 2,
             p: 2,
-            maxWidth: 700,
           }}
         >
           <Grid item xs={12}>

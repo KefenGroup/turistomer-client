@@ -107,12 +107,13 @@ export default function HomePage() {
               }}
               sx={{ width: "80%" }}
               id="filled-basic"
-              label="Chat with AI!"
+              label="Your Message"
               variant="outlined"
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      type="submit"
                       onClick={() => {
                         setPromptHistory((prev) => [...prev, prompt]);
                         postPrompt();

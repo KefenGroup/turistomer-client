@@ -1,5 +1,6 @@
 import { Avatar, Box, Card, CardHeader, Typography } from "@mui/material";
 import { FC } from "react";
+import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 
 type Props = {
   promptHistory: string[];
@@ -9,17 +10,28 @@ const ChatBox: FC<Props> = ({ promptHistory }) => {
   return (
     <Box
       width={"100%"}
-      height={"100%"}
+      height={"90%"}
       gap={4}
       p={2}
       sx={{
-        overflowY: "scroll",
+        overflowY: "auto",
         boxSizing: "border-box",
         display: "flex",
         // justifyContent: "flex-end",
         flexDirection: "column",
+        justifyContent: promptHistory.length === 0 ? "center" : "",
+        alignItems: promptHistory.length === 0 ? "center" : "",
       }}
     >
+      {promptHistory.length === 0 && (
+        <Typography color="gray" textAlign="center" variant="h4">
+          Start Your Conversation With Turist Omer!
+          <ChatBubbleOutlineIcon
+            sx={{ marginBottom: 1, marginLeft: 0.5 }}
+            fontSize="large"
+          ></ChatBubbleOutlineIcon>
+        </Typography>
+      )}
       {promptHistory.map((val, index) => (
         <div
           id={`prompt_${index}`}
