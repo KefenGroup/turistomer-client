@@ -1,5 +1,3 @@
-
-
 .header {
   box-sizing: border-box;
   padding: 2rem 6.3rem 1.9rem 6.6rem;
@@ -22,7 +20,7 @@
   line-height: 1.5125;
   text-transform: uppercase;
   color: #ffffff;
-  font-family: Prompt, 'Source Sans Pro';
+  font-family: Prompt, "Source Sans Pro";
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -49,10 +47,10 @@
   font-weight: 500;
   line-height: 1.5125;
   color: #eaf7ff;
-  border:none;
-  background-color:transparent;
-  outline:none;
-  font-family: Prompt, 'Source Sans Pro';
+  border: none;
+  background-color: transparent;
+  outline: none;
+  font-family: Prompt, "Source Sans Pro";
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -63,6 +61,20 @@
   animation-fill-mode: forwards;
 }
 
+.explore_button {
+  font-family: Prompt, "Source Sans Pro";
+  font-size: 2.1rem;
+  font-weight: 500;
+  color: #425e6f;
+  text-transform: initial;
+  border-radius: 16px;
+  background-color: #d4e4ec;
+}
+
+.explore_button:hover {
+  background-color: #37657c;
+  color: white;
+}
 
 @keyframes bubble {
   0% {
