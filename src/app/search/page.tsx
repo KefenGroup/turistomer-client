@@ -85,27 +85,16 @@ export default function HomePage() {
     <>
       <style>{"body { overflow: auto; background-color: #e2ebf0; }"}</style>
       <div className={styles.content}>
-        {/* <div className={styles.div_categories}>
-          <p className={styles.header}>Our Popular Categories</p>
-        </div> */}
-
-        <div style={{ border: "solid 1px" }} className={styles.content_2}>
+        <div className={styles.chatbox}>
           <ChatBox promptHistory={promptHistory} />
 
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              width: "100%",
-              position: "relative",
-            }}
-          >
+          <div className={styles.prompt}>
             <TextField
               value={prompt}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 setPrompt(event.target.value);
               }}
-              sx={{ width: "80%" }}
+              className={styles.text_field}
               id="filled-basic"
               label="Your Message"
               variant="outlined"
@@ -124,81 +113,16 @@ export default function HomePage() {
                     </IconButton>
                   </InputAdornment>
                 ),
-                style: { fontSize: 15 },
               }}
-              InputLabelProps={{ style: { fontSize: 12 } }}
-            ></TextField>
+            />
           </div>
-
-          {/* <FilterCard
-            establishmentType={dataType}
-            handleEstablishmentType={(e) => {
-              setIsFetched(false);
-              setDataType(e.target.value as ApiDataType);
-            }}
-          /> */}
         </div>
 
-        {/* <ChatBox promptHistory={promptHistory} />
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-            position: "relative",
-          }}
-        >
-          <TextField
-            value={prompt}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setPrompt(event.target.value);
-            }}
-            sx={{ t: 5, width: "50%" }}
-            id="outlined-basic"
-            label="Chat with AI!"
-            variant="filled"
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => {
-                      setPromptHistory((prev) => [...prev, prompt]);
-                      postPrompt();
-                    }}
-                    edge="end"
-                  >
-                    <Search />
-                  </IconButton>
-                </InputAdornment>
-              ),
-              style: { background: "#b4cbd8", fontSize: 15 },
-            }}
-            InputLabelProps={{ style: { fontSize: 12 } }}
-          ></TextField>
-        </div>
-
-        <FilterCard
-          establishmentType={dataType}
-          handleEstablishmentType={(e) => {
-            setIsFetched(false);
-            setDataType(e.target.value as ApiDataType);
-          }}
-        /> */}
-        <div
-          style={{
-            height: "100%",
-            width: "60%",
-            marginLeft: 30,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-          }}
-        >
+        <div className={styles.card_area}>
           <Pagination
+            className={styles.top_pagination}
             page={pageNumber}
             onChange={(e, val) => setPageNumber(val)}
-            sx={{ marginBottom: 2 }}
             count={10}
             color="primary"
           />
@@ -220,40 +144,13 @@ export default function HomePage() {
               )}
           </div>
           <Pagination
-            sx={{ marginBottom: 10 }}
+            className={styles.bottom_pagination}
             page={pageNumber}
             onChange={(e, val) => setPageNumber(val)}
             count={10}
             color="primary"
           />
         </div>
-
-        {/* <Pagination
-          page={pageNumber}
-          onChange={(e, val) => setPageNumber(val)}
-          sx={{ marginBottom: 2 }}
-          count={10}
-          color="primary"
-        />
-
-        <div>
-          {isFetched &&
-            apiData.map((data: any) =>
-              dataType === "restaurants" ? (
-                <RestaurantCard key={data.id} {...data} />
-              ) : (
-                <HotelCard key={data.id} {...data} />
-              )
-            )}
-        </div>
-
-        <Pagination
-          sx={{ marginBottom: 10 }}
-          page={pageNumber}
-          onChange={(e, val) => setPageNumber(val)}
-          count={10}
-          color="primary"
-        /> */}
       </div>
     </>
   );
