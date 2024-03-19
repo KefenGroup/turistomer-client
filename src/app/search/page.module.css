@@ -5,8 +5,9 @@
   display: flex;
   padding: 2rem;
 }
-.content_2 {
+.content .chatbox {
   box-sizing: border-box;
+  border: 1px solid gray;
   width: 40%;
   max-height: 100vh;
   align-items: center;
@@ -16,6 +17,43 @@
   position: sticky;
   top: 0;
 }
+
+.content .prompt {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+.content .prompt .text_field {
+  width: 80%;
+}
+
+.content .prompt .text_field input {
+  font-size: 15px;
+}
+
+.content .prompt .text_field label {
+  font-size: 12px;
+}
+
+.content .card_area {
+  height: 100%;
+  width: 60%;
+  margin-left: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content .card_area .top_pagination {
+  margin-bottom: 2rem;
+}
+
+.content .card_area .bottom_pagination {
+  margin-bottom: 10rem;
+}
+
 .content .div_categories {
   width: calc(100% - 23.1rem);
   align-items: center;
@@ -34,4 +72,51 @@
   font-family: Poppins, "Source Sans Pro";
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+@media screen and (min-width: 640px) {
+  .content .title_area .title_part_1 {
+    font-size: 4rem;
+    left: -5rem;
+    top: -5rem;
+  }
+
+  .content .title_area .title_part_2 {
+    left: 5rem;
+    top: 3rem;
+    font-size: 4rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+}
+
+@media screen and (min-width: 1024px) {
+  .content .title_area .title_part_1 {
+    font-size: 6rem;
+    left: 5rem;
+    top: -5rem;
+  }
+
+  .content .title_area .title_part_2 {
+    font-size: 6rem;
+    left: 25.7rem;
+    top: 3rem;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+
+}
+
+@media screen and (min-width: 1440px) {
+
+}
+
+@media screen and (min-width: 1920px) {
+
+}
+
+@media screen and (min-width: 2560px) {
+
 }
