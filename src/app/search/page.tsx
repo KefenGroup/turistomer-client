@@ -1,13 +1,14 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import styles from "./page.module.css";
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Search, Send } from "@mui/icons-material";
 import {
   TextField,
   InputAdornment,
   IconButton,
   Pagination,
+  Skeleton,
 } from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
@@ -19,30 +20,80 @@ export default function HomePage() {
 
   const [dataType, setDataType] = useState<ApiDataType>("restaurants");
   const [apiData, setApiData] = useState<any>([]);
+  const [hotelData, setHotelData] = useState<Hotel[]>([]);
+  const [restaurantData, setRestaurantData] = useState<Restaurant[]>([]);
+  const [apiDataToBeFiltered, setApiDataToBeFiltered] = useState<
+    Hotel[] | Restaurant[]
+  >([]);
   const [isFetched, setIsFetched] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [prompt, setPrompt] = useState<string>("");
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
+  const [modelFilter, setModelFilter] = useState<ModelFilter>(null);
 
+  const isModelResponseData = useRef<boolean>(false);
+
+  const handleFilter = useCallback(
+    (data: Hotel[] | Restaurant[] | -1) => {
+      if (data === -1) {
+        setApiDataToBeFiltered(
+          dataType === "restaurants" ? restaurantData : hotelData
+        );
+      } else {
+        setApiDataToBeFiltered(data);
+        setIsFetched(true);
+      }
+    },
+    [dataType, hotelData, restaurantData]
+  );
+  const handleEstablishmentType = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      isModelResponseData.current = false;
+      setDataType(value as ApiDataType);
+
+      if (value === "restaurants") {
+        setApiDataToBeFiltered(restaurantData);
+      } else if (value === "hotels") {
+        setApiDataToBeFiltered(hotelData);
+      }
+    },
+    [hotelData, restaurantData]
+  );
   useEffect(() => {
-    const fetchData = async () => {
-      let base = process.env.BASE_URL;
-      const req = await fetch(
-        `http://localhost:8080/api/${dataType}/${pageNumber - 1}/30`
-      );
-      const data = await req.json();
-      console.log("Hey", data);
-      setApiData(data);
-      setIsFetched(true);
+    const fetchDataRest = async () => {
+      try {
+        const req = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/restaurants`
+        );
+        const data = await req.json();
+        setRestaurantData(data);
+        setApiDataToBeFiltered(data);
+        setIsFetched(true);
+      } catch {
+        console.log("Failed to fetch rest");
+        setIsFetched(false);
+      }
     };
-    fetchData();
-  }, [dataType, pageNumber]);
+    const fetchDataHotel = async () => {
+      try {
+        const req = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/hotels`
+        );
+        const data = await req.json();
+        setHotelData(data);
+      } catch {
+        console.log("Failed to fetch hotel");
+      }
+    };
+    fetchDataRest();
+    fetchDataHotel();
+  }, []);
 
   useEffect(() => {
     const messageBody = document.getElementById(
       `prompt_${promptHistory.length - 1}`
     );
-    console.log("msg", messageBody);
     messageBody?.scrollIntoView({
       block: "nearest",
       behavior: "smooth",
@@ -58,12 +109,14 @@ export default function HomePage() {
     const promptData = {
       type: "restaurant",
       prompt: prompt,
-      latitude: userLoc.latitude,
-      longitude: userLoc.longitude,
+      coordinates: {
+        longitude: userLoc.longitude,
+        latitude: userLoc.latitude,
+      },
     };
     let basicAIPrompt = "";
     try {
-      const req = await fetch(`http://localhost:8080/model`, {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/model`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,14 +124,39 @@ export default function HomePage() {
         body: JSON.stringify(promptData),
       });
       const data = await req.json();
-
+      isModelResponseData.current = true;
+      const { filter, recommendations } = data;
+      console.log(filter);
+      setModelFilter(filter as ModelFilter);
+      // setApiDataToBeFiltered(recommendations);
+      console.log(data);
       basicAIPrompt = "DONE";
     } catch (e) {
       basicAIPrompt = "ERROR";
     }
 
-    // setApiData(data);
     setPromptHistory((prev) => [...prev, basicAIPrompt]);
+  };
+
+  const Loading = () => {
+    return Array.from({ length: 30 }).map((val, index) => (
+      <>
+        <Skeleton
+          animation="wave"
+          sx={{ mb: 1 }}
+          key={index}
+          variant="rounded"
+          width={600}
+          height={350}
+        />
+        <Skeleton
+          sx={{ mb: 2 }}
+          variant="rectangular"
+          width={600}
+          height={20}
+        />
+      </>
+    ));
   };
 
   return (
@@ -122,31 +200,38 @@ export default function HomePage() {
           <Pagination
             className={styles.top_pagination}
             page={pageNumber}
-            onChange={(e, val) => setPageNumber(val)}
+            onChange={(e, val) => {
+              setPageNumber(val);
+            }}
             count={10}
             color="primary"
           />
           <FilterCard
+            modelFilter={modelFilter}
+            handleIsFetch={(bool) => setIsFetched(bool)}
+            handleFilter={handleFilter}
             establishmentType={dataType}
-            handleEstablishmentType={(e) => {
-              setIsFetched(false);
-              setDataType(e.target.value as ApiDataType);
-            }}
+            handleEstablishmentType={handleEstablishmentType}
           />
           <div>
             {isFetched &&
-              apiData.map((data: any) =>
-                dataType === "restaurants" ? (
-                  <RestaurantCard key={data.id} {...data} />
-                ) : (
-                  <HotelCard key={data.id} {...data} />
-                )
-              )}
+              apiDataToBeFiltered
+                .slice((pageNumber - 1) * 30, pageNumber * 30)
+                .map((data: any) =>
+                  dataType === "restaurants" ? (
+                    <RestaurantCard key={data.id} {...data} />
+                  ) : (
+                    <HotelCard key={data.id} {...data} />
+                  )
+                )}
+            {!isFetched && <Loading />}
           </div>
           <Pagination
             className={styles.bottom_pagination}
             page={pageNumber}
-            onChange={(e, val) => setPageNumber(val)}
+            onChange={(e, val) => {
+              setPageNumber(val);
+            }}
             count={10}
             color="primary"
           />
