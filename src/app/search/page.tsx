@@ -2,13 +2,15 @@
 "use client";
 import styles from "./page.module.css";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
-import { Search, Send } from "@mui/icons-material";
+import { RestartAlt, Search, Send } from "@mui/icons-material";
 import {
   TextField,
   InputAdornment,
   IconButton,
   Pagination,
   Skeleton,
+  Button,
+  Typography,
 } from "@mui/material";
 import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
@@ -19,7 +21,6 @@ export default function HomePage() {
   type ApiDataType = "restaurants" | "hotels";
 
   const [dataType, setDataType] = useState<ApiDataType>("restaurants");
-  const [apiData, setApiData] = useState<any>([]);
   const [hotelData, setHotelData] = useState<Hotel[]>([]);
   const [restaurantData, setRestaurantData] = useState<Restaurant[]>([]);
   const [apiDataToBeFiltered, setApiDataToBeFiltered] = useState<
@@ -34,8 +35,8 @@ export default function HomePage() {
   const isModelResponseData = useRef<boolean>(false);
 
   const handleFilter = useCallback(
-    (data: Hotel[] | Restaurant[] | -1) => {
-      if (data === -1) {
+    (data: Hotel[] | Restaurant[] | "change") => {
+      if (data === "change") {
         setApiDataToBeFiltered(
           dataType === "restaurants" ? restaurantData : hotelData
         );
@@ -107,7 +108,7 @@ export default function HomePage() {
       userLoc.latitude = position.coords.latitude;
     });
     const promptData = {
-      type: "restaurant",
+      type: dataType.substring(0, dataType.length - 1),
       prompt: prompt,
       coordinates: {
         longitude: userLoc.longitude,
@@ -126,16 +127,28 @@ export default function HomePage() {
       const data = await req.json();
       isModelResponseData.current = true;
       const { filter, recommendations } = data;
-      console.log(filter);
+      console.log(filter, recommendations);
       setModelFilter(filter as ModelFilter);
-      // setApiDataToBeFiltered(recommendations);
-      console.log(data);
+      setApiDataToBeFiltered(recommendations);
       basicAIPrompt = "DONE";
     } catch (e) {
       basicAIPrompt = "ERROR";
     }
 
     setPromptHistory((prev) => [...prev, basicAIPrompt]);
+  };
+
+  const handleReset = async () => {
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/model/reset`, {
+        method: "POST",
+      });
+    } catch {
+      console.log("Reset had failed");
+    }
+    setApiDataToBeFiltered(
+      dataType === "restaurants" ? restaurantData : hotelData
+    );
   };
 
   const Loading = () => {
@@ -157,6 +170,33 @@ export default function HomePage() {
         />
       </>
     ));
+  };
+
+  const NoResult = () => {
+    return (
+      <div
+        style={{
+          height: "70vh",
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Typography color="gray" textAlign="center" variant="h4">
+          Couldn't Find Any Result Matched with the Filter
+        </Typography>
+        <Button
+          onClick={handleReset}
+          size="large"
+          sx={{ mt: 2, width: "fit-content", height: "fit-content" }}
+          endIcon={<RestartAlt />}
+        >
+          Reset
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -203,10 +243,11 @@ export default function HomePage() {
             onChange={(e, val) => {
               setPageNumber(val);
             }}
-            count={10}
+            count={Math.ceil(apiDataToBeFiltered.length / 30)}
             color="primary"
           />
           <FilterCard
+            onReset={handleReset}
             modelFilter={modelFilter}
             handleIsFetch={(bool) => setIsFetched(bool)}
             handleFilter={handleFilter}
@@ -225,6 +266,7 @@ export default function HomePage() {
                   )
                 )}
             {!isFetched && <Loading />}
+            {apiDataToBeFiltered.length === 0 && <NoResult />}
           </div>
           <Pagination
             className={styles.bottom_pagination}
@@ -232,7 +274,7 @@ export default function HomePage() {
             onChange={(e, val) => {
               setPageNumber(val);
             }}
-            count={10}
+            count={Math.ceil(apiDataToBeFiltered.length / 30)}
             color="primary"
           />
         </div>

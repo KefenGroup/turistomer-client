@@ -4,6 +4,7 @@ import {
   ArrowUpward,
   CheckBox,
   CheckBoxOutlineBlank,
+  RestartAlt,
 } from "@mui/icons-material";
 import {
   Box,
@@ -24,10 +25,11 @@ import React, { FC, memo, useEffect, useRef, useState } from "react";
 
 type Props = {
   handleEstablishmentType: (data: any) => void;
-  handleFilter: (data: Hotel[] | Restaurant[] | -1) => void;
+  handleFilter: (data: Hotel[] | Restaurant[] | "change") => void;
   establishmentType: "restaurants" | "hotels";
   handleIsFetch: (bool: boolean) => void;
   modelFilter: ModelFilter;
+  onReset: () => void;
 };
 
 const emptyCheckedFilter = {
@@ -47,7 +49,9 @@ const FilterCard: FC<Props> = memo(function FilterCard({
   handleFilter,
   handleIsFetch,
   modelFilter,
+  onReset,
 }) {
+  const [isItModelFilter, setIsItModelFilter] = useState<boolean>(false);
   const [minItemToDisplay, setMinItemToDisplay] = useState<number>(12);
   const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilters] = useState<Filter>({
@@ -61,7 +65,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
     amenity: null,
   });
   const cardRef = useRef<HTMLDivElement>(null);
-
+  const isModelFilter = useRef<boolean>(false);
   useEffect(() => {
     if (!modelFilter) return;
     const priceType = modelFilter.isCheap
@@ -79,6 +83,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       coordinates: modelFilter.coordinates,
       amenity: modelFilter.amenity,
     };
+    isModelFilter.current = true;
     setCheckedFilters(checkedFilter as Filter);
   }, [modelFilter]);
 
@@ -95,6 +100,10 @@ const FilterCard: FC<Props> = memo(function FilterCard({
   }, [cardRef]);
 
   useEffect(() => {
+    if (isModelFilter.current) {
+      isModelFilter.current = false;
+      return;
+    }
     const postData = {
       cuisine: checkedFilter.cuisine,
       location: checkedFilter.location,
@@ -109,7 +118,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
     const fetchFilteredData = async () => {
       handleIsFetch(false);
       const req = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/restaurants/filter`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/${establishmentType}/filter`,
         {
           method: "POST",
           headers: {
@@ -122,17 +131,14 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       console.log(data);
       handleFilter(data);
     };
-    console.log(JSON.stringify(emptyCheckedFilter));
-    console.log(JSON.stringify(checkedFilter));
     if (JSON.stringify(emptyCheckedFilter) !== JSON.stringify(checkedFilter))
       fetchFilteredData();
     else {
-      handleFilter(-1);
+      handleFilter("change");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedFilter]);
 
-  console.log(checkedFilter);
   function RestaurantFilterCard() {
     return (
       <>
@@ -439,83 +445,51 @@ const FilterCard: FC<Props> = memo(function FilterCard({
   function HotelFilterCard() {
     return (
       <>
-        <Grid item xs={6}>
+        <Grid item xs={12}>
           <FormLabel id="demo-radio-buttons-group-label">
             <Typography variant="h5">Ratings</Typography>
           </FormLabel>
-          <RadioGroup row>
-            <FormControlLabel
-              value={5}
-              control={
-                <Radio
-                  checkedIcon={<CheckBox />}
-                  icon={<CheckBoxOutlineBlank />}
-                />
-              }
-              label={
-                <div style={{ justifyContent: "center", display: "flex" }}>
-                  <Rating name="read-only" value={5} readOnly />
-                  <Box sx={{ ml: 1 }}></Box>
-                </div>
-              }
-            />
-
-            <FormControlLabel
-              value={4}
-              control={
-                <Radio
-                  checkedIcon={<CheckBox />}
-                  icon={<CheckBoxOutlineBlank />}
-                />
-              }
-              label={
-                <div style={{ justifyContent: "center", display: "flex" }}>
-                  <Rating name="read-only" value={4} readOnly />
-                  <Box sx={{ ml: 1 }}>& up</Box>
-                </div>
-              }
-            />
-            <FormControlLabel
-              value={3}
-              control={
-                <Radio
-                  checkedIcon={<CheckBox />}
-                  icon={<CheckBoxOutlineBlank />}
-                />
-              }
-              label={
-                <div style={{ justifyContent: "center", display: "flex" }}>
-                  <Rating name="read-only" value={3} readOnly />
-                  <Box sx={{ ml: 1 }}>& up</Box>
-                </div>
-              }
-            />
-            <FormControlLabel
-              value={2}
-              control={
-                <Radio
-                  checkedIcon={<CheckBox />}
-                  icon={<CheckBoxOutlineBlank />}
-                />
-              }
-              label={
-                <div style={{ justifyContent: "center", display: "flex" }}>
-                  <Rating name="read-only" value={2} readOnly />
-                  <Box sx={{ ml: 1 }}>& up</Box>
-                </div>
-              }
-            />
+          <RadioGroup
+            value={checkedFilter.minRating}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCheckedFilters({
+                ...checkedFilter,
+                minRating: parseInt(e.target.value),
+              })
+            }
+            row
+          >
+            {[5, 4, 3, 2].map((val) => (
+              <FormControlLabel
+                key={val}
+                value={val}
+                control={
+                  <Radio
+                    onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                      if (
+                        checkedFilter.minRating ===
+                        parseInt((e.target as HTMLInputElement).value)
+                      ) {
+                        setCheckedFilters({
+                          ...checkedFilter,
+                          minRating: null,
+                        });
+                      }
+                    }}
+                    id="rating"
+                    checkedIcon={<CheckBox />}
+                    icon={<CheckBoxOutlineBlank />}
+                  />
+                }
+                label={
+                  <div style={{ justifyContent: "center", display: "flex" }}>
+                    <Rating name="read-only" value={val} readOnly />
+                    <Box sx={{ ml: 1 }}>{val === 5 ? "" : "& up"}</Box>
+                  </div>
+                }
+              />
+            ))}
           </RadioGroup>
-        </Grid>
-        <Grid item xs={6}>
-          <FormLabel id="demo-radio-buttons-group-label">
-            <Typography variant="h5">Price</Typography>
-          </FormLabel>
-          <FormGroup row>
-            <FormControlLabel control={<Checkbox />} label="Cheap" />
-            <FormControlLabel control={<Checkbox />} label="Average" />
-            <FormControlLabel control={<Checkbox />} label="Expensive" />
-          </FormGroup>
         </Grid>
 
         <Grid item xs={12}>
@@ -523,10 +497,34 @@ const FilterCard: FC<Props> = memo(function FilterCard({
           <FormLabel id="demo-radio-buttons-group-label">
             <Typography variant="h5">City</Typography>
           </FormLabel>
-          <FormGroup row>
+          <FormGroup
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setCheckedFilters((prev) => {
+                const { value } = e.target;
+                if (!prev.location) return { ...prev, location: [value] };
+                else if (prev.location.includes(value)) {
+                  const newLocation =
+                    prev.location.length === 1
+                      ? null
+                      : prev.location.filter((location) => location !== value);
+                  return { ...prev, location: newLocation };
+                } else return { ...prev, location: [...prev.location, value] };
+              });
+            }}
+            row
+          >
             {CITY_NAMES.map((city) => (
               <Grid key={city} item xs={3}>
-                <FormControlLabel control={<Checkbox />} label={city} />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checkedFilter.location?.includes(city)}
+                      id="city"
+                      value={city}
+                    />
+                  }
+                  label={city}
+                />
               </Grid>
             ))}
           </FormGroup>
@@ -537,10 +535,34 @@ const FilterCard: FC<Props> = memo(function FilterCard({
           <FormLabel id="demo-radio-buttons-group-label">
             <Typography variant="h5">Amenities</Typography>
           </FormLabel>
-          <FormGroup row>
+          <FormGroup
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setCheckedFilters((prev) => {
+                const { value } = e.target;
+                if (!prev.amenity) return { ...prev, amenity: [value] };
+                else if (prev.amenity.includes(value)) {
+                  const newAmenity =
+                    prev.amenity.length === 1
+                      ? null
+                      : prev.amenity.filter((amenity) => amenity !== value);
+                  return { ...prev, amenity: newAmenity };
+                } else return { ...prev, amenity: [...prev.amenity, value] };
+              });
+            }}
+            row
+          >
             {HOTEL_AMENITIES.slice(0, minItemToDisplay).map((type) => (
               <Grid key={type} item xs={3}>
-                <FormControlLabel control={<Checkbox />} label={type} />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      id="amenity"
+                      value={type}
+                      checked={checkedFilter.amenity?.includes(type)}
+                    />
+                  }
+                  label={type}
+                />
               </Grid>
             ))}
           </FormGroup>
@@ -554,13 +576,28 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       ref={cardRef}
       style={{ width: "100%", height: "100%", marginBottom: 20 }}
     >
-      <Button
-        onClick={() => setIsFilterVisible(!isFilterVisible)}
-        variant="contained"
-        endIcon={isFilterVisible ? <ArrowDownward /> : <ArrowUpward />}
-      >
-        <Typography variant="h6">Filter</Typography>
-      </Button>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Button
+          onClick={() => setIsFilterVisible(!isFilterVisible)}
+          variant="contained"
+          endIcon={isFilterVisible ? <ArrowDownward /> : <ArrowUpward />}
+        >
+          <Typography variant="h6">Filter</Typography>
+        </Button>
+
+        <Button
+          onClick={() => {
+            onReset();
+            setCheckedFilters(emptyCheckedFilter);
+          }}
+          sx={{ ml: 1 }}
+          variant="contained"
+          endIcon={<RestartAlt />}
+        >
+          <Typography variant="h6">Reset</Typography>
+        </Button>
+      </div>
+
       {isFilterVisible && (
         <Card
           sx={{
@@ -581,6 +618,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
                 name="radio-buttons-group"
                 value={establishmentType}
                 onChange={(e) => {
+                  setCheckedFilters(emptyCheckedFilter);
                   setMinItemToDisplay(12);
                   handleEstablishmentType(e);
                 }}
