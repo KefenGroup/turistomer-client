@@ -60,15 +60,13 @@ const ChatBox: FC<Props> = ({ promptHistory }) => {
                   sx={{
                     width: 24,
                     height: 24,
-                    bgcolor: "black",
                   }}
-                  aria-label="recipe"
-                >
-                  Y
-                </Avatar>
+                  src={index % 2 == 0 ? "/user.png" : "/bot.png"}
+                />
               }
             />
             <Typography
+              variant="h6"
               sx={{
                 textAlign: index % 2 == 0 ? "right" : "left",
               }}

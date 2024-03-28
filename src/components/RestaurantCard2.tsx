@@ -74,35 +74,41 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
 
             <Divider sx={{ marginY: 2 }} />
 
-            <Grid item xs={12}>
-              <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                Meals
-              </Typography>
-              <Grid container spacing={2}>
-                {meals.map(({ id, name }) => (
-                  <Grid item xs={4} key={id}>
-                    <Typography variant="h6">{name}</Typography>
+            {meals.length !== 0 && (
+              <>
+                <Grid item xs={12}>
+                  <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                    Meals
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {meals.map(({ id, name }) => (
+                      <Grid item xs={4} key={id}>
+                        <Typography variant="h6">{name}</Typography>
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
-            </Grid>
+                </Grid>
+                <Divider sx={{ width: 50, marginY: 1 }} />
+              </>
+            )}
 
-            <Divider sx={{ width: 50, marginY: 1 }} />
-
-            <Grid item xs={12}>
-              <Typography sx={{ paddingBottom: 1 }} variant="h5">
-                Good For
-              </Typography>
-              <Grid container spacing={2}>
-                {purposes.map(({ name, id }) => (
-                  <Grid item xs={4} key={id}>
-                    <Typography variant="h6">{name}</Typography>
+            {purposes.filter(({ id, name }) => name === "nan").length === 0 && (
+              <>
+                <Grid item xs={12}>
+                  <Typography sx={{ paddingBottom: 1 }} variant="h5">
+                    Good For
+                  </Typography>
+                  <Grid container spacing={2}>
+                    {purposes.map(({ name, id }) => (
+                      <Grid item xs={4} key={id}>
+                        <Typography variant="h6">{name}</Typography>
+                      </Grid>
+                    ))}
                   </Grid>
-                ))}
-              </Grid>
-            </Grid>
-
-            <Divider sx={{ width: 50, marginY: 1 }} />
+                </Grid>
+                <Divider sx={{ width: 50, marginY: 1 }} />
+              </>
+            )}
 
             <Grid container spacing={2}>
               {cuisines.length !== 0 && (
@@ -136,8 +142,10 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
               </Typography>
 
               <Typography variant="h6" display="flex" alignItems="center">
-                <CurrencyLira /> {priceLower + "  -  "}
-                {priceHigher}
+                <CurrencyLira />
+                {priceHigher === -1 || priceLower === -1
+                  ? "?"
+                  : priceLower + "  -  " + priceHigher}
               </Typography>
 
               <CardActions>
