@@ -56,3 +56,12 @@ type ModelFilter = {
     latitude: number;
   } | null;
 } | null;
+
+type ApiDataType = "restaurants" | "hotels";
+
+type ResultArea = {
+  fetchState: string;
+  apiDataToBeFiltered: Hotel[] | Restaurant[];
+  pageNumber: number;
+  dataType: ApiDataType;
+};
