@@ -115,7 +115,8 @@ export default function HomePage() {
         latitude: userLoc.latitude,
       },
     };
-    let basicAIPrompt = "";
+    let basicAIPrompt = ". . .";
+    setPromptHistory((prev) => [...prev, basicAIPrompt]);
     try {
       const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/model`, {
         method: "POST",
@@ -130,12 +131,15 @@ export default function HomePage() {
       console.log(filter, recommendations);
       setModelFilter(filter as ModelFilter);
       setApiDataToBeFiltered(recommendations);
-      basicAIPrompt = "DONE";
+      basicAIPrompt = `There are ${recommendations.length} ${dataType} that matched with the filter.`;
     } catch (e) {
-      basicAIPrompt = "ERROR";
+      basicAIPrompt =
+        "Upss! Something went wrong. You can try to reset the filters.";
     }
 
-    setPromptHistory((prev) => [...prev, basicAIPrompt]);
+    setPromptHistory((prev) => {
+      return [...prev.slice(0, prev.length - 1), basicAIPrompt];
+    });
   };
 
   const handleReset = async () => {
@@ -150,6 +154,8 @@ export default function HomePage() {
       dataType === "restaurants" ? restaurantData : hotelData
     );
   };
+
+  window.onload = handleReset;
 
   const Loading = () => {
     return Array.from({ length: 30 }).map((val, index) => (

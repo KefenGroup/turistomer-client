@@ -66,6 +66,7 @@ const ChatBox: FC<Props> = ({ promptHistory }) => {
               }
             />
             <Typography
+              variant="h6"
               sx={{
                 textAlign: index % 2 == 0 ? "right" : "left",
               }}
