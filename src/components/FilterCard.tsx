@@ -27,7 +27,7 @@ type Props = {
   handleEstablishmentType: (data: any) => void;
   handleFilter: (data: Hotel[] | Restaurant[] | "change") => void;
   establishmentType: "restaurants" | "hotels";
-  handleIsFetch: (bool: boolean) => void;
+  handleFetchState: (state: string) => void;
   modelFilter: ModelFilter;
   onReset: () => void;
 };
@@ -47,7 +47,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
   handleEstablishmentType,
   establishmentType,
   handleFilter,
-  handleIsFetch,
+  handleFetchState,
   modelFilter,
   onReset,
 }) {
@@ -116,7 +116,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       amenity: checkedFilter.amenity,
     };
     const fetchFilteredData = async () => {
-      handleIsFetch(false);
+      handleFetchState("not_fetched");
       const req = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/${establishmentType}/filter`,
         {
@@ -131,6 +131,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       console.log(data);
       handleFilter(data);
     };
+    // fetchFilteredData();
     if (JSON.stringify(emptyCheckedFilter) !== JSON.stringify(checkedFilter))
       fetchFilteredData();
     else {

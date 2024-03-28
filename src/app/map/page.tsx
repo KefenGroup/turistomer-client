@@ -1,10 +1,11 @@
 "use client";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Map } from "react-map-gl";
+import { GeolocateControl, Map } from "react-map-gl";
 import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 import { useSearchParams } from "next/navigation";
+import mapboxgl from "mapbox-gl";
 
 export default function DirectionsMap() {
   // interface IViewState {
@@ -35,6 +36,15 @@ export default function DirectionsMap() {
       profile: "mapbox/driving",
     })
   );
+  const mapGeoLocRef = useRef(
+    new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+      showUserHeading: true,
+    })
+  );
 
   useEffect(() => {
     navigator.geolocation.watchPosition(
@@ -54,23 +64,27 @@ export default function DirectionsMap() {
     if (mapState) {
       if (!mapState.hasControl(mapControlRef.current)) {
         mapState.addControl(mapControlRef.current, "top-left");
+        mapState.addControl(mapGeoLocRef.current);
       }
-
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log(position.coords);
-          mapControlRef.current.setOrigin([
-            position.coords.longitude,
-            position.coords.latitude,
-          ]);
-          mapControlRef.current.setDestination([
-            searchParams.get("lat"),
-            searchParams.get("lng"),
-          ]);
-        },
-        (err) => console.log(err),
-        { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true }
-      );
+      mapControlRef.current.setDestination([
+        searchParams.get("lat"),
+        searchParams.get("lng"),
+      ]);
+      // navigator.geolocation.getCurrentPosition(
+      //   (position) => {
+      //     console.log(position.coords);
+      //     mapControlRef.current.setOrigin([
+      //       position.coords.longitude,
+      //       position.coords.latitude,
+      //     ]);
+      //     mapControlRef.current.setDestination([
+      //       searchParams.get("lat"),
+      //       searchParams.get("lng"),
+      //     ]);
+      //   },
+      //   (err) => console.log(err),
+      //   { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true }
+      // );
     }
   }, [mapState, userLocation, searchParams]);
 
