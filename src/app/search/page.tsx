@@ -46,6 +46,18 @@ export default function HomePage() {
 
   const isModelResponseData = useRef<boolean>(false);
 
+  const emptyModelFilter = {
+    cuisine: null,
+    location: null,
+    meal: null,
+    isClose: [0],
+    isCheap: null,
+    isExpensive: null,
+    minRating: 0,
+    amenity: null,
+    coordinates: null,
+  };
+
   const handleFilter = useCallback(
     (data: Hotel[] | Restaurant[] | "change") => {
       if (data === "change") {
@@ -83,8 +95,9 @@ export default function HomePage() {
       } else if (value === "hotels") {
         setApiDataToBeFiltered(hotelData);
       }
-      await handleResetFetch();
-      setPromptHistory([]);
+      handleReset();
+      // await handleResetFetch();
+      // setPromptHistory([]);
     },
     [hotelData, restaurantData]
   );
@@ -238,7 +251,10 @@ export default function HomePage() {
           Couldn't Find Any Result Matched with the Filter
         </Typography>
         <Button
-          onClick={handleReset}
+          onClick={() => {
+            handleReset();
+            setModelFilter(emptyModelFilter);
+          }}
           size="large"
           sx={{ mt: 2, width: "fit-content", height: "fit-content" }}
           endIcon={<RestartAlt />}
