@@ -51,7 +51,6 @@ const FilterCard: FC<Props> = memo(function FilterCard({
   modelFilter,
   onReset,
 }) {
-  const [isItModelFilter, setIsItModelFilter] = useState<boolean>(false);
   const [minItemToDisplay, setMinItemToDisplay] = useState<number>(12);
   const [isFilterVisible, setIsFilterVisible] = useState<boolean>(false);
   const [checkedFilter, setCheckedFilters] = useState<Filter>({
@@ -115,6 +114,7 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       coordinates: checkedFilter.coordinates,
       amenity: checkedFilter.amenity,
     };
+    console.log("postdata: ", postData);
     const fetchFilteredData = async () => {
       handleFetchState("not_fetched");
       const req = await fetch(
@@ -255,16 +255,14 @@ const FilterCard: FC<Props> = memo(function FilterCard({
             }}
             row
           >
-            {["Vegeterian", "Gluten-free", "Vegan"].map((diet) => (
+            {["Vegeterian", "Gluten-Free", "Vegan"].map((diet) => (
               <FormControlLabel
                 key={diet}
                 control={
                   <Checkbox
-                    checked={checkedFilter.cuisine?.includes(
-                      diet.toLowerCase()
-                    )}
+                    checked={checkedFilter.cuisine?.includes(diet)}
                     id="cuisines"
-                    value={diet.toLowerCase()}
+                    value={diet}
                   />
                 }
                 label={diet}
@@ -297,9 +295,9 @@ const FilterCard: FC<Props> = memo(function FilterCard({
             <FormControlLabel
               control={
                 <Checkbox
-                  checked={checkedFilter.amenity?.includes("big_group")}
+                  checked={checkedFilter.amenity?.includes("big group")}
                   id="purposes"
-                  value="big_group"
+                  value="big group"
                 />
               }
               label="Big Groups"

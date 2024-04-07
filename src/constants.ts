@@ -4,7 +4,7 @@ export const CITY_NAMES = [
   "Çanakkale",
   "İzmir",
   "Antalya",
-  "İstanbul",
+  "Istanbul",
   "Ankara",
   "Aydın",
   "Balıkesir",
