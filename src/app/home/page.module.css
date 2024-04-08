@@ -23,7 +23,7 @@
 
 .content .title_area {
   width: 100%;
-  height: 100%;
+  height: 50%;
   position: relative;
   flex-shrink: 0;
   animation: fadeIn 3s;
@@ -59,6 +59,30 @@
   color: #e7f5ff;
   font-family: "Poppins", "Source Sans Pro";
   white-space: nowrap;
+}
+
+.text_field {
+  width: 60%;
+}
+
+.text_field input {
+  font-size: 15px;
+}
+
+.text_field label {
+  font-size: 12px;
+}
+
+.buttons {
+  font-family: Prompt, "Source Sans Pro";
+  font-size: 2.1rem;
+  font-weight: 500;
+  text-transform: initial;
+  border-radius: 16px;
+}
+.buttons:hover {
+  background-color: #37657c;
+  color: white;
 }
 
 @keyframes fadeIn {
