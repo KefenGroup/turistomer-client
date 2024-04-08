@@ -605,46 +605,6 @@ const FilterCard: FC<Props> = memo(function FilterCard({
             p: 2,
           }}
         >
-          <Grid item xs={12}>
-            <FormControl>
-              <FormLabel id="establishmentType-group-label">
-                <Typography variant="h5">Establishment Type</Typography>
-              </FormLabel>
-              <RadioGroup
-                row
-                aria-labelledby="establishmentType-radio-group-label"
-                defaultValue="hotels"
-                name="radio-buttons-group"
-                value={establishmentType}
-                onChange={(e) => {
-                  setCheckedFilters(emptyCheckedFilter);
-                  setMinItemToDisplay(12);
-                  handleEstablishmentType(e);
-                }}
-              >
-                <FormControlLabel
-                  value="restaurants"
-                  control={
-                    <Radio
-                      checkedIcon={<CheckBox />}
-                      icon={<CheckBoxOutlineBlank />}
-                    />
-                  }
-                  label="Restaurant"
-                />
-                <FormControlLabel
-                  value="hotels"
-                  control={
-                    <Radio
-                      checkedIcon={<CheckBox />}
-                      icon={<CheckBoxOutlineBlank />}
-                    />
-                  }
-                  label="Hotel"
-                />
-              </RadioGroup>
-            </FormControl>
-          </Grid>
           <Grid container spacing={2}>
             {establishmentType === "restaurants" ? (
               <RestaurantFilterCard />

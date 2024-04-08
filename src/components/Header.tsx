@@ -31,6 +31,7 @@ const Header: FC<{}> = () => {
           </div>
         </div>
         <Button
+          style={{ visibility: "hidden" }}
           onClick={() => router.push("/search")}
           className={styles.explore_button}
           variant="contained"

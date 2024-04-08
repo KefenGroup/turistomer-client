@@ -59,6 +59,8 @@ type ModelFilter = {
 
 type ApiDataType = "restaurants" | "hotels";
 
+type newApiDataType = "restaurants" | "hotels" | null;
+
 type ResultArea = {
   fetchState: string;
   apiDataToBeFiltered: Hotel[] | Restaurant[];

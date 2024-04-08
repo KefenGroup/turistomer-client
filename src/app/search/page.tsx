@@ -24,6 +24,7 @@ import RestaurantCard from "@/components/RestaurantCard2";
 import HotelCard from "@/components/HotelCard2";
 import FilterCard from "@/components/FilterCard";
 import ChatBox from "@/components/ChatBox";
+import { useSearchParams } from "next/navigation";
 enum FetchState {
   INITIAL = "initial",
   FETCHED = "fetched",
@@ -31,8 +32,11 @@ enum FetchState {
   ZERO_RESULT = "zero_result",
 }
 
-export default function HomePage() {
-  const [dataType, setDataType] = useState<ApiDataType>("restaurants");
+export default function SearchPage() {
+  const searchParams = useSearchParams();
+  const [dataType, setDataType] = useState<ApiDataType>(
+    searchParams.get("dataType") as ApiDataType
+  );
   const [hotelData, setHotelData] = useState<Hotel[]>([]);
   const [restaurantData, setRestaurantData] = useState<Restaurant[]>([]);
   const [apiDataToBeFiltered, setApiDataToBeFiltered] = useState<
@@ -40,7 +44,9 @@ export default function HomePage() {
   >([]);
   const [fetchState, setFetchState] = useState<FetchState>(FetchState.INITIAL);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [prompt, setPrompt] = useState<string>("");
+  const [prompt, setPrompt] = useState<string>(
+    searchParams.get("initialPrompt") as string
+  );
   const [promptHistory, setPromptHistory] = useState<string[]>([]);
   const [modelFilter, setModelFilter] = useState<ModelFilter>(null);
 
@@ -103,6 +109,7 @@ export default function HomePage() {
   );
 
   const handlePostPrompt = async () => {
+    console.log("runn");
     setFetchState(FetchState.NOT_FETCHED);
     let userLoc = { longitude: 0, latitude: 0 };
     navigator.geolocation.getCurrentPosition((position) => {
@@ -210,8 +217,11 @@ export default function HomePage() {
     });
   }, [promptHistory]);
 
+  const buttonRef = useRef(null);
+
   useEffect(() => {
     window.onload = handleReset;
+    if (buttonRef.current) buttonRef.current.click();
   }, []);
 
   const Loading = () => {
@@ -325,6 +335,7 @@ export default function HomePage() {
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
+                      ref={buttonRef}
                       type="submit"
                       onClick={() => {
                         setPromptHistory((prev) => [...prev, prompt]);
