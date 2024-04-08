@@ -32,6 +32,7 @@ type Restaurant = {
   meals: Attr[];
   purposes: Attr[];
   name: string;
+  img: string;
 };
 
 const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
@@ -46,6 +47,7 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
   latitude,
   purposes,
   meals,
+  img,
 }) {
   const router = useRouter();
   return (
@@ -61,7 +63,7 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
           <CardMedia
             component="img"
             sx={{ height: 140, borderRadius: "5%" }}
-            image="/hotelcard.jpg"
+            image={img}
           />
         </Grid>
 
