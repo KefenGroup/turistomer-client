@@ -381,9 +381,13 @@ export default function SearchPage() {
             {fetchState === FetchState.FETCHED &&
               apiDataToBeFiltered
                 .slice((pageNumber - 1) * 30, pageNumber * 30)
-                .map((data: any) =>
+                .map((data: any, index) =>
                   dataType === "restaurants" ? (
-                    <RestaurantCard key={data.id} {...data} />
+                    <RestaurantCard
+                      img={`/rest${index + 1}.jpg`}
+                      key={data.id}
+                      {...data}
+                    />
                   ) : (
                     <HotelCard key={data.id} {...data} />
                   )

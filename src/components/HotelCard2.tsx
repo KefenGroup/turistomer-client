@@ -81,7 +81,7 @@ const HotelCard: FC<Hotel> = memo(function HotelCard({
             <Divider sx={{ marginY: 2 }} />
             <Grid container spacing={2}>
               {filteredAmenities.length !== 0 && (
-                <Grid sx={{}} item xs={12}>
+                <Grid sx={{ height: 200, overflowY: "auto" }} item xs={12}>
                   <Typography sx={{ paddingBottom: 1 }} variant="h5">
                     {filteredAmenities[page - 1].groupName}
                   </Typography>
