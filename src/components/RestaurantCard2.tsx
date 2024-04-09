@@ -13,6 +13,7 @@ import {
   CurrencyLira,
   ForkRightRounded,
   StarOutline,
+  Tour,
 } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 
@@ -33,6 +34,7 @@ type Restaurant = {
   purposes: Attr[];
   name: string;
   img: string;
+  link: string;
 };
 
 const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
@@ -48,6 +50,7 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
   purposes,
   meals,
   img,
+  link,
 }) {
   const router = useRouter();
   return (
@@ -151,6 +154,14 @@ const RestaurantCard: FC<Restaurant> = memo(function RestaurantCard({
               </Typography>
 
               <CardActions>
+                <Button
+                  onClick={() => {
+                    window.open(`${link}`);
+                  }}
+                  startIcon={<Tour />}
+                >
+                  Visit
+                </Button>
                 <Button
                   onClick={() =>
                     router.push(`/map?lng=${longitude}&lat=${latitude}`)

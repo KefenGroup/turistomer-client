@@ -82,34 +82,17 @@ export default function SearchPage() {
       const { value } = e.target;
       isModelResponseData.current = false;
       setDataType(value as ApiDataType);
-
-      // if (value === "restaurants") {
-      //   if (!restaurantData.length) {
-      //     await fetchDataRest();
-      //   } else {
-      //     setApiDataToBeFiltered(restaurantData);
-      //   }
-      // } else if (value === "hotels") {
-      //   if (!hotelData.length) {
-      //     await fetchDataHotel();
-      //   } else {
-      //     setApiDataToBeFiltered(hotelData);
-      //   }
-      // }
       if (value === "restaurants") {
         setApiDataToBeFiltered(restaurantData);
       } else if (value === "hotels") {
         setApiDataToBeFiltered(hotelData);
       }
       handleReset();
-      // await handleResetFetch();
-      // setPromptHistory([]);
     },
     [hotelData, restaurantData]
   );
 
   const handlePostPrompt = async () => {
-    console.log("runn");
     setFetchState(FetchState.NOT_FETCHED);
     let userLoc = { longitude: 0, latitude: 0 };
     navigator.geolocation.getCurrentPosition((position) => {
@@ -137,7 +120,6 @@ export default function SearchPage() {
       const data = await req.json();
       isModelResponseData.current = true;
       const { filter, recommendations } = data;
-      console.log(filter, recommendations);
 
       setModelFilter(filter as ModelFilter);
       setApiDataToBeFiltered(recommendations);
@@ -171,19 +153,6 @@ export default function SearchPage() {
       setFetchState(FetchState.FETCHED);
     } catch {
       console.log("Failed to fetch rest");
-      setFetchState(FetchState.ZERO_RESULT);
-    }
-  };
-  const fetchDataHotel = async () => {
-    try {
-      setFetchState(FetchState.NOT_FETCHED);
-      const req = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/hotels`);
-      const data = await req.json();
-      setHotelData(data);
-      setApiDataToBeFiltered(data);
-      setFetchState(FetchState.FETCHED);
-    } catch {
-      console.log("Failed to fetch hotel");
       setFetchState(FetchState.ZERO_RESULT);
     }
   };
