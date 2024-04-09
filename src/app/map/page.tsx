@@ -49,7 +49,6 @@ export default function DirectionsMap() {
   useEffect(() => {
     navigator.geolocation.watchPosition(
       (position) => {
-        console.log(position.coords);
         mapControlRef.current.setOrigin([
           position.coords.longitude,
           position.coords.latitude,
@@ -70,21 +69,6 @@ export default function DirectionsMap() {
         searchParams.get("lat"),
         searchParams.get("lng"),
       ]);
-      // navigator.geolocation.getCurrentPosition(
-      //   (position) => {
-      //     console.log(position.coords);
-      //     mapControlRef.current.setOrigin([
-      //       position.coords.longitude,
-      //       position.coords.latitude,
-      //     ]);
-      //     mapControlRef.current.setDestination([
-      //       searchParams.get("lat"),
-      //       searchParams.get("lng"),
-      //     ]);
-      //   },
-      //   (err) => console.log(err),
-      //   { maximumAge: 60000, timeout: 5000, enableHighAccuracy: true }
-      // );
     }
   }, [mapState, userLocation, searchParams]);
 

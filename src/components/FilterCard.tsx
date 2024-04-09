@@ -114,7 +114,6 @@ const FilterCard: FC<Props> = memo(function FilterCard({
       coordinates: checkedFilter.coordinates,
       amenity: checkedFilter.amenity,
     };
-    console.log("postdata: ", postData);
     const fetchFilteredData = async () => {
       handleFetchState("not_fetched");
       const req = await fetch(
@@ -128,7 +127,6 @@ const FilterCard: FC<Props> = memo(function FilterCard({
         }
       );
       const data = await req.json();
-      console.log(data);
       handleFilter(data);
     };
     // fetchFilteredData();
