@@ -389,7 +389,11 @@ export default function SearchPage() {
                       {...data}
                     />
                   ) : (
-                    <HotelCard key={data.id} {...data} />
+                    <HotelCard
+                      img={`/hotel${index + 1}.jpg`}
+                      key={data.id}
+                      {...data}
+                    />
                   )
                 )}
             <ResultArea />

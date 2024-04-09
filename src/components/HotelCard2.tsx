@@ -32,6 +32,7 @@ type Hotel = {
   amenities: Amenity[];
   name: string;
   link: string;
+  img: string;
 };
 
 const HotelCard: FC<Hotel> = memo(function HotelCard({
@@ -43,6 +44,7 @@ const HotelCard: FC<Hotel> = memo(function HotelCard({
   longitude,
   latitude,
   link,
+  img,
 }) {
   const [page, setPage] = useState(1);
 
@@ -69,7 +71,7 @@ const HotelCard: FC<Hotel> = memo(function HotelCard({
           <CardMedia
             component="img"
             sx={{ height: 140, borderRadius: "5%" }}
-            image="/hotelcard.jpg"
+            image={img}
           />
         </Grid>
         <Grid item xs={7}>
